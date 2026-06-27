@@ -162,6 +162,7 @@
 <body>
 
 <div class="header">
+  <div style="width:38px;"></div>
   <h1>Ma tirelire</h1>
   <button class="gear-btn" onclick="openOptions()" aria-label="Options">⚙️</button>
 </div>
@@ -196,23 +197,18 @@
     <div class="panel-title">Options</div>
 
     <div class="option-group">
-      <div class="option-label">Montant maximum</div>
-      <div class="toggle-row">
-        <label>
-          Jusqu'à 100 €
-          <span class="sub">Tirages entre 10 € et 100 €</span>
-        </label>
-        <label class="switch">
+      <div class="option-label" style="text-align:center;">Montant maximum</div>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; margin-top:0.25rem;">
+        <span style="font-size:16px; font-weight:600; color:#3d2030; min-width:48px; text-align:left;">100 €</span>
+        <label class="switch" style="flex-shrink:0;">
           <input type="checkbox" id="max-toggle" onchange="onMaxChange()">
           <span class="slider"></span>
         </label>
+        <span style="font-size:16px; font-weight:600; color:#3d2030; min-width:48px; text-align:right;">200 €</span>
       </div>
-      <div class="option-desc" id="max-desc">Montant max actuel : <strong id="max-label">200 €</strong></div>
-    </div>
-
-    <div class="option-group">
-      <div class="option-label">Danger zone</div>
-      <button class="reset-btn" style="font-size:14px; color:#c06060;" onclick="resetAll()">🗑 Remettre à zéro</button>
+      <div style="text-align:center; font-size:14px; color:#a08080; margin-top:0.25rem;">
+        Montant max actuel : <strong id="max-label" style="color:#3d2030;">200 €</strong>
+      </div>
     </div>
 
     <button class="close-btn" onclick="closeOptions()">Fermer</button>
@@ -240,7 +236,7 @@
         entries = data.entries || [];
         maxAmount = data.maxAmount || 200;
         document.getElementById('total').textContent = total + ' €';
-        document.getElementById('max-toggle').checked = (maxAmount === 100);
+        document.getElementById('max-toggle').checked = (maxAmount === 200);
         document.getElementById('max-label').textContent = maxAmount + ' €';
         if (entries.length > 0) {
           renderHistory();
@@ -260,7 +256,7 @@
   }
 
   function onMaxChange() {
-    maxAmount = document.getElementById('max-toggle').checked ? 100 : 200;
+    maxAmount = document.getElementById('max-toggle').checked ? 200 : 100;
     document.getElementById('max-label').textContent = maxAmount + ' €';
     save();
   }
