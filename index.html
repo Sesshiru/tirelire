@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Tirelire">
+<meta name="theme-color" content="#f9b4c8">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.png">
+<title>Ma Tirelire</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    min-height: 100vh; min-height: -webkit-fill-available;
+    background: #fdf6f0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    padding: env(safe-area-inset-top, 2rem) 1rem env(safe-area-inset-bottom, 2rem);
+    gap: 1.5rem; user-select: none;
+  }
+  h1 { font-size: 22px; font-weight: 600; color: #3d2030; text-align: center; }
+  .card {
+    background: white; border-radius: 24px; border: 1px solid #f0ddd5;
+    padding: 2rem; width: 100%; max-width: 360px;
+    display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
+    box-shadow: 0 4px 24px rgba(249,180,200,0.2);
+  }
+  .piggy-img { width: 130px; height: 130px; object-fit: contain; }
+  .piggy-img.bounce { animation: piggy-bounce 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes piggy-bounce {
+    0%   { transform: scale(1) rotate(0deg); }
+    30%  { transform: scale(1.13) rotate(-5deg); }
+    65%  { transform: scale(1.07) rotate(3deg); }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+  .amount-box { min-height: 72px; display: flex; align-items: center; justify-content: center; }
+  .placeholder { font-size: 36px; color: #d4b8ad; }
+  .amount { font-size: 52px; font-weight: 700; color: #2a9d5c; letter-spacing: -1px; display: none; }
+  @keyframes pop {
+    from { opacity: 0; transform: scale(0.6); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  .btn {
+    width: 100%; padding: 1rem; border-radius: 14px; border: none;
+    background: #f9b4c8; color: #7a2040; font-size: 16px; font-weight: 600;
+    cursor: pointer; -webkit-appearance: none; transition: transform 0.1s;
+  }
+  .btn:active { transform: scale(0.97); background: #f49ab8; }
+  .btn:disabled { opacity: 0.6; }
+  .total-row {
+    width: 100%; display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid #f0ddd5; padding-top: 1rem;
+  }
+  .total-label { font-size: 14px; color: #a08080; }
+  .total-value { font-size: 18px; font-weight: 600; color: #3d2030; }
+  .reset-btn { background: none; border: none; color: #c9a0a0; font-size: 12px; cursor: pointer; text-decoration: underline; }
+  .history { width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: 6px; }
+  .history-title { font-size: 12px; color: #a08080; text-transform: uppercase; letter-spacing: 0.05em; padding: 0 4px; }
+  .history-item {
+    background: white; border: 1px solid #f0ddd5; border-radius: 10px;
+    padding: 0.5rem 1rem; display: flex; justify-content: space-between;
+    font-size: 14px; color: #3d2030; animation: slide-in 0.22s ease;
+  }
+  @keyframes slide-in {
+    from { opacity: 0; transform: translateY(-5px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .history-date { color: #a08080; font-size: 12px; }
+  .history-amount { color: #2a9d5c; font-weight: 600; }
+  .install-hint {
+    font-size: 12px; color: #b09090; text-align: center;
+    max-width: 300px; line-height: 1.6; display: none;
+    background: white; border: 1px solid #f0ddd5; border-radius: 12px; padding: 0.75rem 1rem;
+  }
+</style>
+</head>
+<body>
+
+<h1>Ma tirelire 🐷</h1>
+
+<div class="card">
+  <img class="piggy-img" id="piggy" src="icon.png" alt="Tirelire"/>
+  <div class="amount-box">
+    <div class="placeholder" id="placeholder">🎲</div>
+    <div class="amount" id="amount"></div>
+  </div>
+  <button class="btn" id="btn" onclick="roll()">Combien j'économise ?</button>
+  <div class="total-row">
+    <span class="total-label">Total mis de côté</span>
+    <span class="total-value" id="total">0 €</span>
+  </div>
+  <button class="reset-btn" onclick="resetAll()">Remettre à zéro</button>
+</div>
+
+<div class="history" id="history-wrap" style="display:none">
+  <div class="history-title">Historique</div>
+  <div id="history"></div>
+</div>
+
+<p class="install-hint" id="install-hint">
+  💡 Pour installer l'app : appuie sur le bouton <strong>Partager ⎙</strong> en bas de Safari, puis choisis <strong>"Sur l'écran d'accueil"</strong>.
+</p>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone === true;
+  if (isSafari && !isStandalone) {
+    document.getElementById('install-hint').style.display = 'block';
+  }
+
+  let total = 0, entries = [];
+
+  function load() {
+    try {
+      const saved = localStorage.getItem('tirelire');
+      if (saved) {
+        const data = JSON.parse(saved);
+        total = data.total || 0;
+        entries = data.entries || [];
+        document.getElementById('total').textContent = total + ' €';
+        if (entries.length > 0) {
+          renderHistory();
+          document.getElementById('history-wrap').style.display = 'flex';
+          document.getElementById('placeholder').style.display = 'none';
+          const el = document.getElementById('amount');
+          el.style.display = 'block';
+          el.textContent = '+' + entries[0].val + ' €';
+          document.getElementById('btn').textContent = 'Encore un tirage !';
+        }
+      }
+    } catch(e) {}
+  }
+
+  function save() {
+    try { localStorage.setItem('tirelire', JSON.stringify({ total, entries })); } catch(e) {}
+  }
+
+  function playClick() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator(), gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1400, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.4, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+      osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.25);
+      const osc2 = ctx.createOscillator(), gain2 = ctx.createGain();
+      osc2.connect(gain2); gain2.connect(ctx.destination);
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(2200, ctx.currentTime + 0.05);
+      osc2.frequency.exponentialRampToValueAtTime(1600, ctx.currentTime + 0.12);
+      gain2.gain.setValueAtTime(0.2, ctx.currentTime + 0.05);
+      gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+      osc2.start(ctx.currentTime + 0.05); osc2.stop(ctx.currentTime + 0.2);
+    } catch(e) {}
+  }
+
+  function roll() {
+    const btn = document.getElementById('btn');
+    btn.disabled = true; btn.textContent = 'On tire…';
+    setTimeout(() => {
+      const val = (Math.floor(Math.random() * 20) + 1) * 10;
+      playClick(); bouncePiggy(); showAmount(val);
+      total += val;
+      document.getElementById('total').textContent = total + ' €';
+      addHistory(val); save();
+      btn.disabled = false; btn.textContent = 'Encore un tirage !';
+    }, 500);
+  }
+
+  function bouncePiggy() {
+    const img = document.getElementById('piggy');
+    img.classList.remove('bounce'); void img.offsetWidth; img.classList.add('bounce');
+    img.addEventListener('animationend', () => img.classList.remove('bounce'), { once: true });
+  }
+
+  function showAmount(val) {
+    document.getElementById('placeholder').style.display = 'none';
+    const el = document.getElementById('amount');
+    el.style.display = 'block'; el.style.animation = 'none';
+    void el.offsetWidth; el.style.animation = 'pop 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+    el.textContent = '+' + val + ' €';
+  }
+
+  function addHistory(val) {
+    const now = new Date();
+    const date = now.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    entries.unshift({ val, date });
+    if (entries.length > 10) entries.pop();
+    renderHistory();
+    document.getElementById('history-wrap').style.display = 'flex';
+  }
+
+  function renderHistory() {
+    document.getElementById('history').innerHTML = entries.map(e =>
+      '<div class="history-item"><span class="history-date">' + e.date + '</span><span class="history-amount">+' + e.val + ' €</span></div>'
+    ).join('');
+  }
+
+  function resetAll() {
+    if (!confirm('Remettre à zéro ?')) return;
+    total = 0; entries = []; save();
+    document.getElementById('total').textContent = '0 €';
+    document.getElementById('history').innerHTML = '';
+    document.getElementById('history-wrap').style.display = 'none';
+    document.getElementById('placeholder').style.display = 'block';
+    document.getElementById('amount').style.display = 'none';
+    document.getElementById('btn').textContent = "Combien j'économise ?";
+  }
+
+  window.addEventListener('beforeunload', save);
+  window.addEventListener('pagehide', save);
+  load();
+</script>
+</body>
+</html>
