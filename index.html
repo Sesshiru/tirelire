@@ -22,10 +22,7 @@
     gap: 1.5rem; user-select: none;
   }
 
-  .header {
-    width: 100%; max-width: 360px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
+  .header { width: 100%; max-width: 360px; display: flex; align-items: center; justify-content: space-between; }
   h1 { font-size: 22px; font-weight: 600; color: #3d2030; flex: 1; text-align: center; }
   .gear-btn {
     background: none; border: none; cursor: pointer;
@@ -36,13 +33,10 @@
   .gear-btn:active { background: #f0ddd5; }
   .spacer { width: 38px; flex-shrink: 0; }
 
-  /* Overlay */
   .overlay {
-    position: fixed; inset: 0;
-    background: rgba(61,32,48,0.3);
+    position: fixed; inset: 0; background: rgba(61,32,48,0.3);
     display: flex; align-items: flex-end; justify-content: center;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.25s; z-index: 100;
+    opacity: 0; pointer-events: none; transition: opacity 0.25s; z-index: 100;
   }
   .overlay.open { opacity: 1; pointer-events: all; }
   .panel {
@@ -63,19 +57,14 @@
   }
   .option-label { font-size: 12px; color: #a08080; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; text-align: center; }
 
-  /* Toggle max amount */
   .toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
   .toggle-side { font-size: 16px; font-weight: 600; color: #3d2030; min-width: 48px; }
   .toggle-side.right { text-align: right; }
   .switch { position: relative; width: 50px; height: 28px; flex-shrink: 0; }
   .switch input { opacity: 0; width: 0; height: 0; }
-  .slider {
-    position: absolute; inset: 0; border-radius: 28px;
-    background: #e0ccc8; cursor: pointer; transition: background 0.2s;
-  }
+  .slider { position: absolute; inset: 0; border-radius: 28px; background: #e0ccc8; cursor: pointer; transition: background 0.2s; }
   .slider:before {
-    content: ''; position: absolute;
-    width: 22px; height: 22px; border-radius: 50%;
+    content: ''; position: absolute; width: 22px; height: 22px; border-radius: 50%;
     background: white; top: 3px; left: 3px;
     transition: transform 0.2s cubic-bezier(0.34,1.4,0.64,1);
     box-shadow: 0 1px 4px rgba(0,0,0,0.15);
@@ -84,7 +73,6 @@
   input:checked + .slider:before { transform: translateX(22px); }
   .current-max { font-size: 13px; color: #a08080; text-align: center; }
 
-  /* Participants stepper */
   .stepper-row { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
   .stepper-label { font-size: 15px; color: #3d2030; flex: 1; }
   .stepper { display: flex; align-items: center; gap: 0.5rem; }
@@ -92,11 +80,9 @@
     width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid #f0ddd5;
     background: white; font-size: 20px; font-weight: 300; color: #7a2040;
     cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: background 0.15s;
   }
   .step-btn:active { background: #f9e8f0; }
   .step-val { font-size: 18px; font-weight: 600; color: #3d2030; min-width: 24px; text-align: center; }
-  .participants-note { font-size: 12px; color: #a08080; text-align: center; line-height: 1.5; }
 
   .close-btn {
     width: 100%; padding: 0.9rem; border-radius: 14px; border: none;
@@ -105,7 +91,6 @@
   }
   .close-btn:active { background: #f49ab8; }
 
-  /* Card */
   .card {
     background: white; border-radius: 24px; border: 1px solid #f0ddd5;
     padding: 2rem; width: 100%; max-width: 360px;
@@ -121,10 +106,12 @@
     100% { transform: scale(1) rotate(0deg); }
   }
 
-  .amount-box { display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 80px; justify-content: center; }
+  .amount-box { display: flex; flex-direction: column; align-items: center; gap: 6px; min-height: 72px; justify-content: center; }
   .placeholder { font-size: 36px; color: #d4b8ad; }
-  .amount { font-size: 52px; font-weight: 700; color: #2a9d5c; letter-spacing: -1px; display: none; }
-  .amount-total { font-size: 14px; color: #a08080; display: none; }
+  .amount-row { display: flex; align-items: baseline; gap: 8px; display: none; }
+  .amount { font-size: 52px; font-weight: 700; color: #2a9d5c; letter-spacing: -1px; }
+  .amount-multiplier { font-size: 20px; font-weight: 600; color: #f9b4c8; }
+
   @keyframes pop {
     from { opacity: 0; transform: scale(0.6); }
     to   { opacity: 1; transform: scale(1); }
@@ -144,14 +131,13 @@
   }
   .total-label { font-size: 14px; color: #a08080; }
   .total-value { font-size: 18px; font-weight: 600; color: #3d2030; }
-
   .reset-btn { background: none; border: none; color: #c9a0a0; font-size: 12px; cursor: pointer; text-decoration: underline; }
 
   .history { width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: 6px; }
   .history-title { font-size: 12px; color: #a08080; text-transform: uppercase; letter-spacing: 0.05em; padding: 0 4px; }
   .history-item {
     background: white; border: 1px solid #f0ddd5; border-radius: 10px;
-    padding: 0.5rem 1rem; display: flex; justify-content: space-between;
+    padding: 0.5rem 1rem; display: flex; justify-content: space-between; align-items: center;
     font-size: 14px; color: #3d2030; animation: slide-in 0.22s ease;
   }
   @keyframes slide-in {
@@ -159,9 +145,9 @@
     to   { opacity: 1; transform: translateY(0); }
   }
   .history-date { color: #a08080; font-size: 12px; }
-  .history-right { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
+  .history-right { display: flex; align-items: baseline; gap: 5px; }
   .history-amount { color: #2a9d5c; font-weight: 600; }
-  .history-total { color: #a08080; font-size: 11px; }
+  .history-multiplier { color: #f9b4c8; font-size: 12px; font-weight: 600; }
 
   .install-hint {
     font-size: 12px; color: #b09090; text-align: center;
@@ -183,8 +169,10 @@
 
   <div class="amount-box">
     <div class="placeholder" id="placeholder">🎲</div>
-    <div class="amount" id="amount"></div>
-    <div class="amount-total" id="amount-total"></div>
+    <div class="amount-row" id="amount-row">
+      <span class="amount" id="amount"></span>
+      <span class="amount-multiplier" id="amount-multiplier"></span>
+    </div>
   </div>
 
   <button class="btn" id="btn" onclick="roll()">Combien j'économise ?</button>
@@ -205,7 +193,6 @@
   💡 Pour installer : appuie sur <strong>⎙ Partager</strong> dans Safari puis <strong>"Sur l'écran d'accueil"</strong>.
 </p>
 
-<!-- Options -->
 <div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
   <div class="panel">
     <div class="panel-handle"></div>
@@ -233,10 +220,6 @@
           <span class="step-val" id="participants-val">1</span>
           <button class="step-btn" onclick="changeParticipants(1)">+</button>
         </div>
-      </div>
-      <div class="participants-note" id="participants-note" style="display:none">
-        Le montant tiré sera multiplié par <strong id="p-count">2</strong>.<br>
-        L'app affiche ta part + le total commun.
       </div>
     </div>
 
@@ -268,19 +251,15 @@
         document.getElementById('max-toggle').checked = (maxAmount === 200);
         document.getElementById('max-label').textContent = maxAmount + ' €';
         document.getElementById('participants-val').textContent = participants;
-        updateParticipantsNote();
         if (entries.length > 0) {
           renderHistory();
           document.getElementById('history-wrap').style.display = 'flex';
           document.getElementById('placeholder').style.display = 'none';
-          const el = document.getElementById('amount');
-          el.style.display = 'block';
-          el.textContent = '+' + entries[0].val + ' €';
-          if (entries[0].totalVal) {
-            const elT = document.getElementById('amount-total');
-            elT.style.display = 'block';
-            elT.textContent = 'Total commun : +' + entries[0].totalVal + ' €';
-          }
+          const row = document.getElementById('amount-row');
+          row.style.display = 'flex';
+          row.style.animation = '';
+          document.getElementById('amount').textContent = '+' + entries[0].val + ' €';
+          document.getElementById('amount-multiplier').textContent = entries[0].participants > 1 ? '×' + entries[0].participants : '';
           document.getElementById('btn').textContent = 'Encore un tirage !';
         }
       }
@@ -300,19 +279,7 @@
   function changeParticipants(delta) {
     participants = Math.max(1, Math.min(10, participants + delta));
     document.getElementById('participants-val').textContent = participants;
-    updateParticipantsNote();
     save();
-  }
-
-  function updateParticipantsNote() {
-    const note = document.getElementById('participants-note');
-    const pCount = document.getElementById('p-count');
-    if (participants > 1) {
-      note.style.display = 'block';
-      pCount.textContent = participants;
-    } else {
-      note.style.display = 'none';
-    }
   }
 
   function openOptions() { document.getElementById('overlay').classList.add('open'); }
@@ -322,22 +289,20 @@
   function playClick() {
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctx.createOscillator(), gain = ctx.createGain();
-      osc.connect(gain); gain.connect(ctx.destination);
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(1400, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.08);
-      gain.gain.setValueAtTime(0.4, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
-      osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.25);
-      const osc2 = ctx.createOscillator(), gain2 = ctx.createGain();
-      osc2.connect(gain2); gain2.connect(ctx.destination);
-      osc2.type = 'sine';
-      osc2.frequency.setValueAtTime(2200, ctx.currentTime + 0.05);
-      osc2.frequency.exponentialRampToValueAtTime(1600, ctx.currentTime + 0.12);
-      gain2.gain.setValueAtTime(0.2, ctx.currentTime + 0.05);
-      gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
-      osc2.start(ctx.currentTime + 0.05); osc2.stop(ctx.currentTime + 0.2);
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination); o.type = 'sine';
+      o.frequency.setValueAtTime(1400, ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.08);
+      g.gain.setValueAtTime(0.4, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+      o.start(ctx.currentTime); o.stop(ctx.currentTime + 0.25);
+      const o2 = ctx.createOscillator(), g2 = ctx.createGain();
+      o2.connect(g2); g2.connect(ctx.destination); o2.type = 'sine';
+      o2.frequency.setValueAtTime(2200, ctx.currentTime + 0.05);
+      o2.frequency.exponentialRampToValueAtTime(1600, ctx.currentTime + 0.12);
+      g2.gain.setValueAtTime(0.2, ctx.currentTime + 0.05);
+      g2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+      o2.start(ctx.currentTime + 0.05); o2.stop(ctx.currentTime + 0.2);
     } catch(e) {}
   }
 
@@ -347,11 +312,13 @@
     setTimeout(() => {
       const steps = maxAmount / 10;
       const val = (Math.floor(Math.random() * steps) + 1) * 10;
-      const totalVal = val * participants;
-      playClick(); bouncePiggy(); showAmount(val, totalVal);
-      total += val;
+      const realTotal = val * participants;
+      playClick(); bouncePiggy();
+      showAmount(val);
+      total += realTotal;
       document.getElementById('total').textContent = total + ' €';
-      addHistory(val, totalVal); save();
+      addHistory(val, participants);
+      save();
       btn.disabled = false; btn.textContent = 'Encore un tirage !';
     }, 500);
   }
@@ -362,25 +329,20 @@
     img.addEventListener('animationend', () => img.classList.remove('bounce'), { once: true });
   }
 
-  function showAmount(val, totalVal) {
+  function showAmount(val) {
     document.getElementById('placeholder').style.display = 'none';
-    const el = document.getElementById('amount');
-    el.style.display = 'block'; el.style.animation = 'none';
-    void el.offsetWidth; el.style.animation = 'pop 0.4s cubic-bezier(0.34,1.56,0.64,1)';
-    el.textContent = '+' + val + ' €';
-    const elT = document.getElementById('amount-total');
-    if (participants > 1) {
-      elT.style.display = 'block';
-      elT.textContent = 'Total commun : +' + totalVal + ' €';
-    } else {
-      elT.style.display = 'none';
-    }
+    const row = document.getElementById('amount-row');
+    row.style.display = 'flex';
+    row.style.animation = 'none'; void row.offsetWidth;
+    row.style.animation = 'pop 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+    document.getElementById('amount').textContent = '+' + val + ' €';
+    document.getElementById('amount-multiplier').textContent = participants > 1 ? '×' + participants : '';
   }
 
-  function addHistory(val, totalVal) {
+  function addHistory(val, p) {
     const now = new Date();
     const date = now.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-    entries.unshift({ val, totalVal: participants > 1 ? totalVal : null, date });
+    entries.unshift({ val, participants: p, date });
     if (entries.length > 10) entries.pop();
     renderHistory();
     document.getElementById('history-wrap').style.display = 'flex';
@@ -392,7 +354,7 @@
         '<span class="history-date">' + e.date + '</span>' +
         '<div class="history-right">' +
           '<span class="history-amount">+' + e.val + ' €</span>' +
-          (e.totalVal ? '<span class="history-total">commun : +' + e.totalVal + ' €</span>' : '') +
+          (e.participants > 1 ? '<span class="history-multiplier">×' + e.participants + '</span>' : '') +
         '</div>' +
       '</div>'
     ).join('');
@@ -405,8 +367,7 @@
     document.getElementById('history').innerHTML = '';
     document.getElementById('history-wrap').style.display = 'none';
     document.getElementById('placeholder').style.display = 'block';
-    document.getElementById('amount').style.display = 'none';
-    document.getElementById('amount-total').style.display = 'none';
+    document.getElementById('amount-row').style.display = 'none';
     document.getElementById('btn').textContent = "Combien j'économise ?";
   }
 
